@@ -1,4 +1,4 @@
-# FirebaseDigitsServer
+# Firebase Digits Server
 A server for Google App Engine to generate authentication tokens for Firebase from digits responses
 
 ## How to Use
