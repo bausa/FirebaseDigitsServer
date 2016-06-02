@@ -1,0 +1,7 @@
+twitter_consumer_key: TWITTER_CONSUMER_KEY_HERE
+twitter_consumer_secret: TWITTER_CONSUMER_SECRET_HERE
+service_account_email: SERVICE_ACCOUNT_EMAIL_HERE
+firebase_private_key: |
+  -----BEGIN PRIVATE KEY-----
+  ...
+  -----END PRIVATE KEY-----
