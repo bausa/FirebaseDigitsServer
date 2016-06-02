@@ -2,7 +2,7 @@ import Foundation
 import DigitsKit
 
 class TokenManager {
-    static let baseURL = "https://reach-e51b7.appspot.com/"
+    static let baseURL = "APP_URL"
     static let tokenPath = "token"
     
     static let operationQueue = NSOperationQueue()
