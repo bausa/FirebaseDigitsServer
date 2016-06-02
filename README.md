@@ -40,24 +40,28 @@ class TokenManager {
         return NSURL(string: urlString)!
     }
     
-    static func generateToken(auth_token: String, auth_token_secret: String, callback: (token: String?, error: NSError?)->()) {
+static func generateToken(auth_token: String, auth_token_secret: String, callback: (token: String?, error: NSError?)->()) {
         // Generate URL
         let url = generateTokenURL(auth_token, auth_token_secret: auth_token_secret)
         
         let task = NSURLSession.sharedSession().dataTaskWithURL(url, completionHandler: { (data, response, error) in
             if (data != nil && error == nil) {
-                let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+                var json: NSDictionary?
+                do {
+                    json = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary
+                } catch {
+                    callback(token: nil, error: standardError())
+                    return
+                }
                 
                 // Chech for invalid
-                if responseString == "invalid" {
+                if let error = json!["error"] as? String {
                     // Return error
-                    callback(token: nil, error: NSError(domain: "DOMAIN_HERE", code: 1, userInfo: [
-                        NSLocalizedDescriptionKey :  "Invalid authorization token",
-                        ]))
+                    callback(token: nil, error: standardError())
                     return
                 } else {
                     // Send token as response
-                    callback(token: responseString! as String, error: nil)
+                    callback(token: json!["token"] as! String, error: nil)
                 }
             } else {
                 callback(token: nil, error: error)
@@ -68,5 +72,10 @@ class TokenManager {
         // Start request
         task.resume()
     }
-}
+    
+    private static func standardError() -> NSError {
+        return NSError(domain: "DOMAIN_HERE", code: 1, userInfo: [
+            NSLocalizedDescriptionKey :  "Invalid authorization token",
+            ])
+    }
 ```
