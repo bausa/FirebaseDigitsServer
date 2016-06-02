@@ -5,6 +5,7 @@ import traceback
 import logging
 import jwt
 import time
+import json
 
 # Setup RS256 Algorithm
 from jwt.contrib.algorithms.pycrypto import RSAAlgorithm
@@ -46,12 +47,13 @@ class TokenRequest(webapp2.RequestHandler):
           # Encodes the UID in a token
           token = encodeTokenFromUID(str(uid))
           # Responds with token
-          self.response.write(token)
+          jsonResponse = json.dumps({'token': token, 'error': None})
+          self.response.write(jsonResponse)
         except tweepy.TweepError as e:
           # Prints exception to log
           logging.error(traceback.format_exc())
           # Responds with invalid
-          self.response.write("invalid")
+          self.response.write(json.dumps({'token': None, 'error': "Invalid token"}))
 
 # Start web server
 app = webapp2.WSGIApplication([
